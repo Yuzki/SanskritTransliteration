@@ -15,5 +15,5 @@
 Install the package using pip:
 
 ```sh
-pip install git+https://github.com/yourusername/SanskritTransliteration.git
+pip install git+https://github.com/Yuzki/SanskritTransliteration.git
 ```
