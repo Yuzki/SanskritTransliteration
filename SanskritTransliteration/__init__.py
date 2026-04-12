@@ -1,1 +1,1 @@
-from .transliteration import transliterate
+from .transliteration import transliterate as transliterate
