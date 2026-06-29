@@ -48,3 +48,21 @@ print(s)  # agním īḷe puróhitam
 ## Ambiguous Reverse Mappings
 
 When multiple CSV rows map the same source token to different targets, the first row in the table takes precedence (first-win rule).
+
+## SLP1 Anunāsika Extension
+
+ISO 15919 distinguishes anunāsika `m̐` from anusvāra `ṃ`, but standard SLP1 uses a
+single token `M` for both. To keep `ISO -> SLP1 -> ISO` reversible, this library
+emits a project-specific extended SLP1 token for anunāsika:
+
+| ISO 15919 | SLP1 output |
+|---|---|
+| `ṃ` (anusvāra) | `M` |
+| `m̐` (anunāsika) | `M~` |
+
+On the reverse path, `M` maps back to `ṃ` and `M~` maps back to `m̐`.
+
+`M~` is a reversible extension specific to this library, not part of standard
+SLP1. Consumers that require strict external SLP1 compatibility should account for
+this extension (for example, by stripping a trailing `~` when the anunāsika
+distinction is not needed).
