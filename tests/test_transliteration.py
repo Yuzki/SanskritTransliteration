@@ -88,6 +88,38 @@ class TestRegressionBugs(unittest.TestCase):
         self.assertEqual(result, "aː")
 
 
+class TestReversibleAnunasika(unittest.TestCase):
+    """ISO anunāsika m̐ vs anusvāra ṃ must round-trip through SLP1.
+
+    Both ISO tokens used to collapse to SLP1 'M', losing the distinction.
+    The m̐ row now emits the project's extended SLP1 token 'M~', while ṃ
+    keeps plain 'M', so ISO -> SLP1 -> ISO is reversible for the pair.
+    """
+
+    def test_anunasika_iso_to_slp1(self):
+        self.assertEqual(transliterate("am̐", "iso", "slp1"), "aM~")
+
+    def test_anusvara_iso_to_slp1(self):
+        self.assertEqual(transliterate("aṃ", "iso", "slp1"), "aM")
+
+    def test_extended_slp1_to_iso(self):
+        # 'M~' is multi-char; longest-first matching must beat bare 'M'
+        self.assertEqual(transliterate("aM~", "slp1", "iso"), "am̐")
+
+    def test_anusvara_slp1_to_iso(self):
+        self.assertEqual(transliterate("aM", "slp1", "iso"), "aṃ")
+
+    def test_iso_round_trip_anunasika(self):
+        text = "am̐"
+        slp1 = transliterate(text, "iso", "slp1")
+        self.assertEqual(transliterate(slp1, "slp1", "iso"), text)
+
+    def test_iso_round_trip_anusvara(self):
+        text = "aṃ"
+        slp1 = transliterate(text, "iso", "slp1")
+        self.assertEqual(transliterate(slp1, "slp1", "iso"), text)
+
+
 class TestAllSingleTokenPairs(unittest.TestCase):
     """For every row in the CSV, verify single-token conversion across all
     scheme pairs.  Ambiguous source tokens (same token in multiple rows for
